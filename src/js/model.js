@@ -18,7 +18,6 @@ import {
   formatAPIResp,
   formatAPITableItems,
   getCreatedTagFromModel,
-
 } from "./helpers.js";
 
 import cloneDeep from "../../node_modules/lodash-es/cloneDeep.js";
@@ -50,21 +49,19 @@ export let diff = {
   tableToCreate: [],
   tableToDuplicate: [],
   tableToDelete: [],
-  diffActive: false
-}
+  diffActive: false,
+};
 
 export let tableFunc = {
   // 1:{ //tableId
   // filter: {}, //filterTagList in the filter,table value
   // sort: {},
-
   // }
+};
 
-}
+export let token = {};
 
-export let token = {}
-
-const pass = () => { };
+const pass = () => {};
 
 export const updateJournalInfo = (payload) => {
   if (payload?.name?.length >= 0) {
@@ -79,7 +76,7 @@ export const updateJournalInfo = (payload) => {
 export const getCurrentTable = (tableId = undefined) => {
   //returns current table or tableId passed into it
   const currentTable = state.tables.find(
-    (table) => table.id === tableId || table.id === state.currentTable
+    (table) => table.id === tableId || table.id === state.currentTable,
   );
   return currentTable;
 };
@@ -93,7 +90,7 @@ export const setCurrentTable = (currentTable) => {
 const checkForAndAddNewTag = (updateObj) => {
   updateObj.forEach((obj) => {
     const objExistInTableTags = state.tags.find(
-      (tag) => tag.text.toLowerCase() === obj.text.toLowerCase()
+      (tag) => tag.text.toLowerCase() === obj.text.toLowerCase(),
     );
 
     if (!objExistInTableTags) state.tags.push(obj);
@@ -102,22 +99,24 @@ const checkForAndAddNewTag = (updateObj) => {
 
 export const checkForAndUpdateTag = (payload) => {
   let tagToUpdate = state.tags.find(
-    (tag) => tag.id === payload.id && tag.text.toLowerCase() === payload.text.toLowerCase()
+    (tag) =>
+      tag.id === payload.id &&
+      tag.text.toLowerCase() === payload.text.toLowerCase(),
   );
 
   //FIXME: make sure obj is replaced
-  if (tagToUpdate) tagToUpdate = payload
-}
+  if (tagToUpdate) tagToUpdate = payload;
+};
 
 const getItemFromTableItems = (table, item, index = false, convert = true) => {
   if (!index)
     return table.tableItems.find(
-      (tableItem) => tableItem.id === (convert ? Number(item) : item)
+      (tableItem) => tableItem.id === (convert ? Number(item) : item),
     );
 
   if (index)
     return table.tableItems.findIndex(
-      (tableItem) => tableItem.id === (convert ? Number(item) : item)
+      (tableItem) => tableItem.id === (convert ? Number(item) : item),
     );
 };
 
@@ -169,7 +168,7 @@ export const getTableItem = function (
   table,
   itemId,
   position = undefined,
-  tableLength = false
+  tableLength = false,
 ) {
   if (!position && !tableLength)
     return table.tableItems.find((item) => {
@@ -234,7 +233,7 @@ export const getTableItem = function (
         item: dynamicArithmeticOperator(
           table.tableItems,
           itemIdIndex,
-          position
+          position,
         ),
         position: null,
       };
@@ -274,14 +273,14 @@ export const getTableItemWithMaxTags = function (table, itemsId) {
 
   return filteredTableItems.reduce(
     (acc, item) => (acc.itemTags.length > item.itemTags.length ? acc : item),
-    filteredTableItems[0]
+    filteredTableItems[0],
   );
 };
 
 export const updateTableName = function (...args) {
   const [formData, journalId] = args;
   const journalToUpdate = state.tables.find(
-    (journal) => journal.id === journalId
+    (journal) => journal.id === journalId,
   );
   journalToUpdate.tableTitle = formData;
   persistData();
@@ -304,7 +303,7 @@ export const duplicateJournal = function (journalId) {
   //construct clone name
   clone.tableTitle = createDuplicateName(
     occurrence > duplicateNum ? occurrence : duplicateNum,
-    clone.tableTitle
+    clone.tableTitle,
   );
 
   state.tables.push(clone);
@@ -317,7 +316,7 @@ export const duplicateJournal = function (journalId) {
 export const deleteJournal = function (journalId) {
   //delete journal data
   const tableToDelete = state.tables.findIndex(
-    (journal) => journal.id === journalId
+    (journal) => journal.id === journalId,
   );
   state.tables.splice(tableToDelete, 1);
   persistData();
@@ -333,18 +332,22 @@ export const addNewTable = function () {
   return createdTableId;
 };
 
-export const addTableItem = function (payload, relativeItem = undefined, APIResp = false) {
-  let tableItem
+export const addTableItem = function (
+  payload,
+  relativeItem = undefined,
+  APIResp = false,
+) {
+  let tableItem;
   const currentTable = getCurrentTable();
   if (!APIResp) tableItem = createTableItem("", payload);
-  if (APIResp) tableItem = payload
+  if (APIResp) tableItem = payload;
 
   if (!relativeItem) currentTable.tableItems.push(tableItem);
   if (relativeItem) {
     const relativeItemIndex = getItemFromTableItems(
       currentTable,
       relativeItem,
-      true
+      true,
     );
     const insertIndex =
       relativeItemIndex - 1 === 0 || relativeItemIndex === 0
@@ -358,10 +361,10 @@ export const addTableItem = function (payload, relativeItem = undefined, APIResp
 
 export const deleteTag = function (tagId) {
   const tagToDelete = state.tags.findIndex(
-    (tag) => String(tag.id) === String(tagId)
+    (tag) => String(tag.id) === String(tagId),
   );
   state.tags.splice(tagToDelete, 1);
-}
+};
 
 export const deleteTableItem = function (payload) {
   const tableToDeleteFrom = getCurrentTable(payload.tableId);
@@ -380,11 +383,11 @@ export const deleteTableItem = function (payload) {
       tableToDeleteFrom,
       payload.itemId,
       false,
-      false
+      false,
     );
 
     const itemIndex = itemToDeleteFrom[deleteVal.key].findIndex(
-      (item) => item.id === deleteVal.propertyId
+      (item) => item.id === deleteVal.propertyId,
     );
 
     const itemGreaterThanOne = itemToDeleteFrom[deleteVal.key].length > 1;
@@ -402,17 +405,17 @@ export const deleteTableItem = function (payload) {
 export const createTagObject = function (payload) {
   //triggers only for fallback tag create
   //create temp id for tag
-  payload.id = stringToHash(payload.tag_name)
+  payload.id = stringToHash(payload.tag_name);
 
-  let formatFailedRequestPayload = formatAPIResp(payload, "apiTags")
-  state.tags.push(formatFailedRequestPayload)
-  formatFailedRequestPayload = {}
-  persistData()
-  return payload.id
-}
+  let formatFailedRequestPayload = formatAPIResp(payload, "apiTags");
+  state.tags.push(formatFailedRequestPayload);
+  formatFailedRequestPayload = {};
+  persistData();
+  return payload.id;
+};
 
 export const updateAPITableItem = function (payload, api = true, tableId) {
-  const updateSingleItem = payload?.id
+  const updateSingleItem = payload?.id;
   const updateMultipleItems = payload?.itemIds;
   const tableToUpdate = getCurrentTable(tableId ?? null);
 
@@ -421,11 +424,16 @@ export const updateAPITableItem = function (payload, api = true, tableId) {
     if (api) {
       //FIXME: make sure implementation doesn't contradict with any other interfacee implementation
       //replace value with api value
-      const tableAPIItem = getItemFromTableItems(tableToUpdate, payload.id, true, true)
-      tableToUpdate.tableItems.splice(tableAPIItem, 1)
-      tableToUpdate.tableItems.splice(tableAPIItem, 0, payload)
-      persistData()
-      return
+      const tableAPIItem = getItemFromTableItems(
+        tableToUpdate,
+        payload.id,
+        true,
+        true,
+      );
+      tableToUpdate.tableItems.splice(tableAPIItem, 1);
+      tableToUpdate.tableItems.splice(tableAPIItem, 0, payload);
+      persistData();
+      return;
     }
 
     const itemToUpdate = getTableItem(tableToUpdate, payload.id);
@@ -442,15 +450,15 @@ export const updateAPITableItem = function (payload, api = true, tableId) {
       if (payload.modelProperty.property.update) {
         const updateValue = payload.modelProperty.property.update;
         const propertyToUpdate = itemToUpdate[updateValue.key].find(
-          (propItem) => propItem.id === updateValue.propertyId
+          (propItem) => propItem.id === updateValue.propertyId,
         );
         if (propertyToUpdate) {
           propertyToUpdate.text = updateValue.value;
           propertyToUpdate.checkbox
             ? (propertyToUpdate.checkbox =
-              payload.modelProperty.checkedProperty.checkbox) &&
-            (propertyToUpdate.checked =
-              payload.modelProperty.checkedProperty.checked)
+                payload.modelProperty.checkedProperty.checkbox) &&
+              (propertyToUpdate.checked =
+                payload.modelProperty.checkedProperty.checked)
             : pass();
         }
       }
@@ -472,13 +480,13 @@ export const updateAPITableItem = function (payload, api = true, tableId) {
           const relativePropertyIndex = itemToUpdate[
             payload.modelProperty.property.key
           ].findIndex(
-            (property) => property.id === payloadValue.relativeProperty
+            (property) => property.id === payloadValue.relativeProperty,
           );
 
           itemToUpdate[payload.modelProperty.property.key].splice(
             relativePropertyIndex + 1,
             0,
-            updateObj
+            updateObj,
           );
         } else itemToUpdate[payload.modelProperty.property.key].push(updateObj);
       }
@@ -486,7 +494,7 @@ export const updateAPITableItem = function (payload, api = true, tableId) {
       if (payload.modelProperty.property.updateActionItem) {
         const updateValue = payload.modelProperty.property.updateActionItem;
         const propertyToUpdate = itemToUpdate[updateValue.key].find(
-          (propItem) => propItem.id === updateValue.propertyId
+          (propItem) => propItem.id === updateValue.propertyId,
         );
         propertyToUpdate.text = updateValue.value;
         propertyToUpdate.checked = updateValue.checked;
@@ -503,13 +511,13 @@ export const updateAPITableItem = function (payload, api = true, tableId) {
     payload?.tags ? checkForAndAddNewTag(formattedTags) : pass();
 
     const itemsToUpdate = payload.itemIds.map((item) =>
-      getItemFromTableItems(tableToUpdate, Number(item))
+      getItemFromTableItems(tableToUpdate, Number(item)),
     );
     itemsToUpdate.forEach((item) => (item.itemTags = [...formattedTags]));
   }
 
   persistData();
-}
+};
 
 export const updateTableItem = function (payload) {
   const updateSingleItem = payload?.itemId;
@@ -534,18 +542,18 @@ export const updateTableItem = function (payload) {
       if (payload.modelProperty.property.update) {
         const updateValue = payload.modelProperty.property.update;
         const propertyToUpdate = itemToUpdate[updateValue.key].find(
-          (propItem) => propItem.id === updateValue.propertyId
+          (propItem) => propItem.id === updateValue.propertyId,
         );
         //add the update item id to the payload
-        payload.updatedItemId = updateValue.propertyId
+        payload.updatedItemId = updateValue.propertyId;
         //FIXME: check against the updatedItem being null to add as create for the diff
         if (propertyToUpdate) {
           propertyToUpdate.text = updateValue.value;
           propertyToUpdate.checkbox
             ? (propertyToUpdate.checkbox =
-              payload.modelProperty.checkedProperty.checkbox) &&
-            (propertyToUpdate.checked =
-              payload.modelProperty.checkedProperty.checked)
+                payload.modelProperty.checkedProperty.checkbox) &&
+              (propertyToUpdate.checked =
+                payload.modelProperty.checkedProperty.checked)
             : pass();
         }
       }
@@ -557,7 +565,7 @@ export const updateTableItem = function (payload) {
           text: payloadValue.value,
         };
         //add the create submodel id to the payload for the diff
-        payload.createdItemId = updateObj.id
+        payload.createdItemId = updateObj.id;
 
         const hasCheckbox = payload.modelProperty.checkedProperty.checkbox;
 
@@ -569,13 +577,13 @@ export const updateTableItem = function (payload) {
           const relativePropertyIndex = itemToUpdate[
             payload.modelProperty.property.key
           ].findIndex(
-            (property) => property.id === payloadValue.relativeProperty
+            (property) => property.id === payloadValue.relativeProperty,
           );
 
           itemToUpdate[payload.modelProperty.property.key].splice(
             relativePropertyIndex + 1,
             0,
-            updateObj
+            updateObj,
           );
         } else itemToUpdate[payload.modelProperty.property.key].push(updateObj);
       }
@@ -583,13 +591,12 @@ export const updateTableItem = function (payload) {
       if (payload.modelProperty.property.updateActionItem) {
         const updateValue = payload.modelProperty.property.updateActionItem;
         const propertyToUpdate = itemToUpdate[updateValue.key].find(
-          (propItem) => propItem.id === updateValue.propertyId
+          (propItem) => propItem.id === updateValue.propertyId,
         );
         if (propertyToUpdate) {
           //TODO: make sure values are getting updated
           propertyToUpdate.text = updateValue.value;
           propertyToUpdate.checked = updateValue.checked;
-
         }
       }
     }
@@ -604,7 +611,7 @@ export const updateTableItem = function (payload) {
     payload?.tags ? checkForAndAddNewTag(formattedTags) : pass();
 
     const itemsToUpdate = payload.itemIds.map((item) =>
-      getItemFromTableItems(tableToUpdate, Number(item))
+      getItemFromTableItems(tableToUpdate, Number(item)),
     );
     itemsToUpdate.forEach((item) => (item.itemTags = [...formattedTags]));
   }
@@ -614,21 +621,21 @@ export const updateTableItem = function (payload) {
 
 export const duplicateTableItem = function (payload) {
   const tableToDuplicateItem = getCurrentTable(payload.tableId);
-  const duplicateCreateList = []
+  const duplicateCreateList = [];
   payload.items.forEach((item) => {
     const itemToDuplicate = cloneDeep(
-      getItemFromTableItems(tableToDuplicateItem, item)
+      getItemFromTableItems(tableToDuplicateItem, item),
     );
 
     itemToDuplicate.id = Date.now();
     //list to be returned to the controller
-    duplicateCreateList.push(itemToDuplicate)
+    duplicateCreateList.push(itemToDuplicate);
 
     tableToDuplicateItem.tableItems.push(itemToDuplicate);
   });
 
   persistData();
-  return duplicateCreateList
+  return duplicateCreateList;
 };
 
 const persistData = () => {
@@ -636,8 +643,8 @@ const persistData = () => {
 };
 
 export const persistToken = function () {
-  localStorage.setItem("token", JSON.stringify(token))
-}
+  localStorage.setItem("token", JSON.stringify(token));
+};
 
 export const persistDiff = () => {
   localStorage.setItem("diffState", JSON.stringify(diff));
@@ -649,8 +656,8 @@ export const persistFunc = () => {
 
 const getPersistedFunc = () => {
   const funcFromDb = localStorage.getItem("funcState");
-  return JSON.parse(funcFromDb)
-}
+  return JSON.parse(funcFromDb);
+};
 
 const getPersistedData = () => {
   const stateFromDb = localStorage.getItem("userJournal");
@@ -662,57 +669,71 @@ const getPersistedDiffData = () => {
   return JSON.parse(diffFromDb);
 };
 
-
 export const loadToken = () => {
-  const storedToken = localStorage.getItem("token")
-  if (storedToken) token = JSON.parse(storedToken)
-}
+  const storedToken = localStorage.getItem("token");
+  if (storedToken) token = JSON.parse(storedToken);
+};
 
 export const replaceTableItemWithAPITableItem = function (tableItem) {
-  const currentTable = getCurrentTable()
-  const currentTableTableItemIndex = getItemFromTableItems(currentTable, tableItem.id, true)
-  const formatAPITableItem = formatAPITableItems(tableItem, "activities")
-  currentTable.tableItems.splice(currentTableTableItemIndex, 1)
-  currentTable.tableItems.splice(currentTableTableItemIndex, 0, formatAPITableItem)
-
-}
+  const currentTable = getCurrentTable();
+  const currentTableTableItemIndex = getItemFromTableItems(
+    currentTable,
+    tableItem.id,
+    true,
+  );
+  const formatAPITableItem = formatAPITableItems(tableItem, "activities");
+  currentTable.tableItems.splice(currentTableTableItemIndex, 1);
+  currentTable.tableItems.splice(
+    currentTableTableItemIndex,
+    0,
+    formatAPITableItem,
+  );
+};
 
 // const replace
 
-const requestJournalTableCallback = function (callBack, journalTableAPIResp, requestState) {
+const requestJournalTableCallback = function (
+  callBack,
+  journalTableAPIResp,
+  requestState,
+) {
   let tableItems = [];
   if (requestState) {
-    journalTableAPIResp.forEach(tableItem => tableItems.push(formatAPIResp(tableItem, "journalTables")))
+    journalTableAPIResp.forEach((tableItem) =>
+      tableItems.push(formatAPIResp(tableItem, "journalTables")),
+    );
     //replace state data with api data
-    replaceStateJournalDataWithAPIData(tableItems, "journalTables")
+    replaceStateJournalDataWithAPIData(tableItems, "journalTables");
 
     //re-call the model init
-    callBack()
+    callBack();
   }
-
-}
+};
 
 const replaceStateJournalDataWithAPIData = function (formattedAPIData, type) {
   if (type === "journal") {
+    state.name = formattedAPIData.name;
+    state.description = formattedAPIData.description;
+    state.tableHeads = formattedAPIData.tableHeads;
+    state.currentTable = formattedAPIData.currentTable;
+    state.tags = formattedAPIData.tags;
+    state.id = formattedAPIData.id;
+    state.username = formattedAPIData.username;
 
-    state.name = formattedAPIData.name
-    state.description = formattedAPIData.description
-    state.tableHeads = formattedAPIData.tableHeads
-    state.currentTable = formattedAPIData.currentTable
-    state.tags = formattedAPIData.tags
-    state.id = formattedAPIData.id
-    state.username = formattedAPIData.username
-
-    tableFunc = formattedAPIData.tableFunc
+    tableFunc = formattedAPIData.tableFunc;
   }
 
   if (type === "journalTables") {
-    state.tables.splice(0, state.tables.length)
-    state.tables.push(...formattedAPIData)
+    state.tables.splice(0, state.tables.length);
+    state.tables.push(...formattedAPIData);
   }
-}
+};
 
-const requestJournalTableData = function (callBack, journalAPIResp, requestState) {
+const requestJournalTableData = function (
+  callBack,
+  journalAPIResp,
+  requestState,
+) {
   if (requestState) {
     const queryObjJournalActiveTable = {
       endpoint: API.APIEnum.JOURNAL_TABLES.LIST, //.GET(journalAPIResp[0].current_table),
@@ -724,17 +745,17 @@ const requestJournalTableData = function (callBack, journalAPIResp, requestState
       alert: false,
       type: "GET",
       callBack: requestJournalTableCallback.bind(null, callBack),
-      callBackParam: true
-    }
+      callBackParam: true,
+    };
 
-    API.queryAPI(queryObjJournalActiveTable)
+    API.queryAPI(queryObjJournalActiveTable);
 
-    const formattedJournalAPIResp = formatAPIResp(...journalAPIResp, "journal")
+    const formattedJournalAPIResp = formatAPIResp(...journalAPIResp, "journal");
 
     //replace state data for journal
-    replaceStateJournalDataWithAPIData(formattedJournalAPIResp, "journal")
+    replaceStateJournalDataWithAPIData(formattedJournalAPIResp, "journal");
   }
-}
+};
 
 const requestJournalData = function (callBack) {
   const queryObjJournal = {
@@ -746,38 +767,39 @@ const requestJournalData = function (callBack) {
     alert: true,
     type: "GET",
     callBack: requestJournalTableData.bind(null, callBack),
-    callBackParam: true
-  }
-  API.queryAPI(queryObjJournal)
-}
+    callBackParam: true,
+  };
+  API.queryAPI(queryObjJournal);
+};
 
 // const loadDataFromAPI = ()
 
-export const init = function (controllerInit = undefined, loadController = false) {
+export const init = function (
+  controllerInit = undefined,
+  loadController = false,
+) {
   if (!loadController) {
-
     const dataLoadedFromDb = getPersistedData();
     if (dataLoadedFromDb) {
-      state = dataLoadedFromDb
-      if (!token.value) loadToken()
-      const initCallBack = init.bind(null, controllerInit, true)
-      requestJournalData(initCallBack)
-
-    };
+      state = dataLoadedFromDb;
+      if (!token.value) loadToken();
+      const initCallBack = init.bind(null, controllerInit, true);
+      requestJournalData(initCallBack);
+    }
 
     if (!dataLoadedFromDb) {
       //create default tables
-      const initCallBack = init.bind(null, controllerInit, true)
-      requestJournalData(initCallBack)
+      const initCallBack = init.bind(null, controllerInit, true);
+      requestJournalData(initCallBack);
     }
   }
 
   if (loadController) {
     //load the table persisted func
-    const funcState = getPersistedFunc()
-    if (funcState) tableFunc = funcState
+    const funcState = getPersistedFunc();
+    if (funcState) tableFunc = funcState;
 
     //load the UI
-    controllerInit(false)
+    controllerInit(false);
   }
 };

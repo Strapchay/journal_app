@@ -5,11 +5,11 @@ import { Alert } from "../components/alerts.js";
 import { COPY_ALERT } from "../config.js";
 import { componentGlobalState } from "./componentView/componentGlobalState.js";
 export default class ContainerSidePeekComponentView {
-  _componentHandler = importComponentOptionsView.object
+  _componentHandler = importComponentOptionsView.object;
   _state;
   _events = ["click", "keyup", "keydown"];
   _updateAndAddTriggeredBeforeUpdateDelay = false;
-  _deleteEventActivated = false
+  _deleteEventActivated = false;
 
   constructor(state) {
     this._state = state;
@@ -25,9 +25,9 @@ export default class ContainerSidePeekComponentView {
         />
       </div>
     `;
-
-    const inputMarkup = `<div class="slide-${inputType}-input slide-input" placeholder="List" contenteditable="true">${type?.text ?? ""
-      }</div>`;
+    const inputMarkup = `<div class="slide-${inputType}-input slide-input" placeholder="List" contenteditable="true">${
+      type?.text ?? ""
+    }</div>`;
 
     const strikeThroughMarkup = `<s>${inputMarkup}</s>`;
     return `
@@ -77,7 +77,7 @@ export default class ContainerSidePeekComponentView {
             </ul>
           </div>
         </div>
-    
+
         <div class="slide-grateful-for">
           <h1 class="slide-headings">Grateful for</h1>
           <div class="slide-grateful-for-options slide-options">
@@ -97,7 +97,6 @@ export default class ContainerSidePeekComponentView {
       </div>
     `;
   }
-
 
   _generateSlideContent(tableItem, tableItemTags) {
     return `
@@ -124,8 +123,9 @@ export default class ContainerSidePeekComponentView {
                 </div>
               </div>
               <div class="slide-tag-text--box">
-                <div class="slide-property-text slide-tag-text hover ${tableItemTags !== "Empty" ? "active" : ""
-      }">${tableItemTags}</div>
+                <div class="slide-property-text slide-tag-text hover ${
+                  tableItemTags !== "Empty" ? "active" : ""
+                }">${tableItemTags}</div>
               </div>
             </div>
           </div>
@@ -140,8 +140,9 @@ export default class ContainerSidePeekComponentView {
                 </div>
               </div>
               <div class="slide-created-text--box">
-                <div class="slide-property-text slide-created-text ${tableItem.id ? "active" : ""
-      }">${dateTimeFormat(tableItem.id ?? "Empty")}
+                <div class="slide-property-text slide-created-text ${
+                  tableItem.id ? "active" : ""
+                }">${dateTimeFormat(tableItem.id ?? "Empty")}
                 </div>
                 <div class="row-actions-render">
                       <div class="row-actions-render-icon">
@@ -165,16 +166,22 @@ export default class ContainerSidePeekComponentView {
   }
 
   _generateSlideTagsMarkup(tableItem) {
-    const tagExists = tableItem.itemTags.length > 0
+    const tagExists = tableItem.itemTags.length > 0;
     if (tagExists) {
-      const markup = tableItem.itemTags.map((tag) => {
-        const tagProperties = componentGlobalState.tags.find(modelTag => modelTag.id === tag)
-        return tagOptionComponent.prototype._generateTagAddMarkup(tagProperties)
-      }).join("")
-      return markup
+      const markup = tableItem.itemTags
+        .map((tag) => {
+          const tagProperties = componentGlobalState.tags.find(
+            (modelTag) => modelTag.id === tag,
+          );
+          return tagOptionComponent.prototype._generateTagAddMarkup(
+            tagProperties,
+          );
+        })
+        .join("");
+      return markup;
     }
 
-    if (!tagExists) return "Empty"
+    if (!tagExists) return "Empty";
   }
 
   _generateMarkup(tableItem = undefined) {
@@ -245,7 +252,7 @@ export default class ContainerSidePeekComponentView {
       this._handleCopyToClipboardEvent(e);
     if (this._tagAddMatchStrategy(e)) this._handleTagAddEvent(e);
     if (this._inputAddMatchStrategy(e)) this._handleInputUpdateAndAddEvent(e);
-    if (this._inputUpdateMatchStrategy(e)) this._handleInputUpdateEventDelay(e)//this._handleInputUpdateEvent(e);
+    if (this._inputUpdateMatchStrategy(e)) this._handleInputUpdateEventDelay(e); //this._handleInputUpdateEvent(e);
 
     if (this._inputDeleteMatchStrategy(e)) this._handleInputDeleteEvent(e);
 
@@ -378,13 +385,13 @@ export default class ContainerSidePeekComponentView {
       payload,
       null,
       null,
-      "title"
+      "title",
     );
   }
 
   _handleCopyToClipboardEvent(e) {
     const copyContent = e.target.closest(
-      ".row-actions-render"
+      ".row-actions-render",
     ).previousElementSibling;
     navigator.clipboard.writeText(copyContent.textContent.trim());
 
@@ -402,7 +409,7 @@ export default class ContainerSidePeekComponentView {
       tableId: cls._state.tableId,
       itemId: cls._state.itemId,
       refreshCallBack: this.refreshContent.bind(cls), //add the callback for the controlUpdateTableItemFallback to call after updating model
-      getUpdatedData: true
+      getUpdatedData: true,
     };
 
     const componentObj = {
@@ -414,14 +421,14 @@ export default class ContainerSidePeekComponentView {
       table: tagViewportHolder,
       updateModel: this._state.modelControllers.callUpdateItemHandler.bind(
         null,
-        updateObj
+        updateObj,
       ),
       subComponentCallback: this._state.modelControllers.callUpdateItemHandler,
       getUpdatedData:
         this._state.eventHandlers.tableItemControllers.controlGetTableItem.bind(
           null,
           cls._state.tableId,
-          cls._state.itemId
+          cls._state.itemId,
         ),
       eventHandlers: this._state.eventHandlers,
       // refreshCaller: this.refreshContent.bind(cls),
@@ -433,12 +440,11 @@ export default class ContainerSidePeekComponentView {
       tagsColors: cls._state.tagsColors,
     };
 
-    const component = new tagOptionComponent(componentObj)
+    const component = new tagOptionComponent(componentObj);
     component.render();
   }
 
   _handleInputUpdateAndAddEvent(e) {
-
     const inputType = this._getInputType(e);
 
     const [inputContainer, checkedValue, updateVal, updateId] =
@@ -448,14 +454,19 @@ export default class ContainerSidePeekComponentView {
       .closest("li")
       .nextElementSibling?.querySelector(`.slide-${inputType}-input`);
 
-    const selectionAnchorOffset = document.getSelection().anchorOffset
+    const selectionAnchorOffset = document.getSelection().anchorOffset;
 
     const inputSelection = document.getSelection().getRangeAt(0)
       .startContainer?.data;
 
     const inputSelectionExists = inputSelection?.length > 0;
 
-    this._setUpdateValueTextContent(updateVal, inputSelectionExists, inputSelection, selectionAnchorOffset)
+    this._setUpdateValueTextContent(
+      updateVal,
+      inputSelectionExists,
+      inputSelection,
+      selectionAnchorOffset,
+    );
 
     const inputModelKey = this._formatInputTypeCamelCase(inputType);
 
@@ -463,14 +474,22 @@ export default class ContainerSidePeekComponentView {
 
     const checkedProperty = this._constructCheckedProperty(
       inputContainsCheckbox,
-      checkedValue
+      checkedValue,
     );
 
-    const update = this._constructUpdateProperty(updateVal, inputModelKey, updateId)
-    const createRelativeProperty = inputSelectionExists || nextElInput ? updateId : null
+    const update = this._constructUpdateProperty(
+      updateVal,
+      inputModelKey,
+      updateId,
+    );
+    const createRelativeProperty =
+      inputSelectionExists || nextElInput ? updateId : null;
 
     //get the ordering value of each item from the UI
-    const { createItemOrdering, itemsOrdering } = this._getItemsOrdering(inputType, createRelativeProperty)
+    const { createItemOrdering, itemsOrdering } = this._getItemsOrdering(
+      inputType,
+      createRelativeProperty,
+    );
 
     const payload = {
       itemId: this._state.itemId,
@@ -479,22 +498,31 @@ export default class ContainerSidePeekComponentView {
         checkedProperty,
         property: {
           create: {
-            value: this._setPayloadCreateValue(inputSelection, inputSelectionExists, selectionAnchorOffset),
+            value: this._setPayloadCreateValue(
+              inputSelection,
+              inputSelectionExists,
+              selectionAnchorOffset,
+            ),
             relativeProperty: createRelativeProperty,
-            ordering: createItemOrdering
+            ordering: createItemOrdering,
           },
           update,
           orderingList: itemsOrdering,
           key: inputModelKey,
           updateAndAddProperty: true,
         },
-
       },
     };
     this._updateAndAddTriggeredBeforeUpdateDelay = true;
 
     //callback after update
-    payload.refreshCallBack = this._refreshAndUpdateUICallBack.bind(this, inputSelectionExists, nextElInput, inputType, updateId)
+    payload.refreshCallBack = this._refreshAndUpdateUICallBack.bind(
+      this,
+      inputSelectionExists,
+      nextElInput,
+      inputType,
+      updateId,
+    );
 
     //update the item
     // debugger;
@@ -502,44 +530,76 @@ export default class ContainerSidePeekComponentView {
       payload,
       null,
       null,
-      payload.modelProperty.property.key
+      payload.modelProperty.property.key,
     );
-
   }
 
   _getItemsOrdering(inputType, createRelativeProperty) {
-    let incrementOrderingIndex = false
-    let createItemOrdering = null
-    const itemsOrdering = Array.from(document.querySelectorAll(`.slide-${inputType}-list li`)).map((item, i) => {
-      if (createRelativeProperty && item.dataset.id === createRelativeProperty) {
-        incrementOrderingIndex = true
-        createItemOrdering = i + 2
-        return { id: item.dataset.id, ordering: i + 1 }
+    let incrementOrderingIndex = false;
+    let createItemOrdering = null;
+    const itemsOrdering = Array.from(
+      document.querySelectorAll(`.slide-${inputType}-list li`),
+    ).map((item, i) => {
+      if (
+        createRelativeProperty &&
+        item.dataset.id === createRelativeProperty
+      ) {
+        incrementOrderingIndex = true;
+        createItemOrdering = i + 2;
+        return { id: item.dataset.id, ordering: i + 1 };
       }
-      return { id: item.dataset.id, ordering: incrementOrderingIndex ? i + 2 : i + 1 }
-    })
+      return {
+        id: item.dataset.id,
+        ordering: incrementOrderingIndex ? i + 2 : i + 1,
+      };
+    });
 
-    return { createItemOrdering: createItemOrdering, itemsOrdering }
+    return { createItemOrdering: createItemOrdering, itemsOrdering };
   }
 
-  _setUpdateValueTextContent(updateVal, inputSelectionExists, inputSelection, selectionAnchorOffset) {
+  _setUpdateValueTextContent(
+    updateVal,
+    inputSelectionExists,
+    inputSelection,
+    selectionAnchorOffset,
+  ) {
     if (updateVal) {
-      if (inputSelectionExists && selectionAnchorOffset > 0 || !inputSelectionExists) updateVal.textContent = updateVal.textContent.trim()
+      if (
+        (inputSelectionExists && selectionAnchorOffset > 0) ||
+        !inputSelectionExists
+      )
+        updateVal.textContent = updateVal.textContent.trim();
       if (inputSelectionExists && selectionAnchorOffset === 0)
-        updateVal.textContent = updateVal.textContent.split(inputSelection)[0].trim()
+        updateVal.textContent = updateVal.textContent
+          .split(inputSelection)[0]
+          .trim();
     }
   }
 
-  _setPayloadCreateValue(inputSelection, inputSelectionExists, selectionAnchorOffset) {
-    if (inputSelectionExists && selectionAnchorOffset > 0 || !inputSelectionExists) return ""
-    if (inputSelectionExists && selectionAnchorOffset === 0) return inputSelection.trim()
+  _setPayloadCreateValue(
+    inputSelection,
+    inputSelectionExists,
+    selectionAnchorOffset,
+  ) {
+    if (
+      (inputSelectionExists && selectionAnchorOffset > 0) ||
+      !inputSelectionExists
+    )
+      return "";
+    if (inputSelectionExists && selectionAnchorOffset === 0)
+      return inputSelection.trim();
   }
 
-  _refreshAndUpdateUICallBack(inputSelectionExists, nextElInput, inputType, updateId) {
+  _refreshAndUpdateUICallBack(
+    inputSelectionExists,
+    nextElInput,
+    inputType,
+    updateId,
+  ) {
     const tableItemData =
       this._state.eventHandlers.tableItemControllers.controlGetTableItem(
         this._state.tableId,
-        this._state.itemId
+        this._state.itemId,
       );
 
     //refresh the content
@@ -548,15 +608,15 @@ export default class ContainerSidePeekComponentView {
     const relativeAddedItem =
       inputSelectionExists || nextElInput
         ? document
-          .querySelector(`[data-id="${updateId}"]`)
-          ?.nextElementSibling?.querySelector(`.slide-${inputType}-input`)
+            .querySelector(`[data-id="${updateId}"]`)
+            ?.nextElementSibling?.querySelector(`.slide-${inputType}-input`)
         : null;
 
     //focus on the relative or last element on content refresh
     const updatedInputContainer = this._getInputContainer(
       null,
       inputType,
-      true
+      true,
     );
     const addedItemInput =
       !relativeAddedItem &&
@@ -576,34 +636,33 @@ export default class ContainerSidePeekComponentView {
 
     //reset the trigger state after content rerender
     this._updateAndAddTriggeredBeforeUpdateDelay = false;
-
   }
 
   _clearPreviousTimer() {
-    clearInterval(this._timer)
-    this._timer = null
+    clearInterval(this._timer);
+    this._timer = null;
   }
 
   _handleInputUpdateEventDelay(e) {
-    if (this._timer) this._clearPreviousTimer()
+    if (this._timer) this._clearPreviousTimer();
     this._timer = setTimeout(() => {
       if (!this._updateAndAddTriggeredBeforeUpdateDelay) {
-        this._handleInputUpdateEvent(e)
-        this._updateAndAddTriggeredBeforeUpdateDelay = false
+        this._handleInputUpdateEvent(e);
+        this._updateAndAddTriggeredBeforeUpdateDelay = false;
       }
 
       if (this._updateAndAddTriggeredBeforeUpdateDelay) {
-        clearInterval(this._timer)
-        this._updateAndAddTriggeredBeforeUpdateDelay = false
+        clearInterval(this._timer);
+        this._updateAndAddTriggeredBeforeUpdateDelay = false;
       }
-    }, 2 * 1000)
+    }, 2 * 1000);
   }
 
   _handleInputUpdateEvent(e) {
     if (this.getDeleteActivatedState()) {
       //prevent an update event from being triggered after a delete event
-      this.setDeleteActivatedState(false)
-      return
+      this.setDeleteActivatedState(false);
+      return;
     }
 
     const inputType = this._getInputType(e);
@@ -614,7 +673,7 @@ export default class ContainerSidePeekComponentView {
 
     const checkedProperty = this._constructCheckedProperty(
       inputContainsCheckbox,
-      checkedValue
+      checkedValue,
     );
 
     const inputModelKey = this._formatInputTypeCamelCase(inputType);
@@ -622,7 +681,7 @@ export default class ContainerSidePeekComponentView {
     const update = this._constructUpdateProperty(
       updateVal,
       inputModelKey,
-      updateId
+      updateId,
     );
 
     const payload = {
@@ -641,7 +700,7 @@ export default class ContainerSidePeekComponentView {
       payload,
       null,
       null,
-      payload.modelProperty.property.update.key
+      payload.modelProperty.property.update.key,
     );
   }
 
@@ -651,27 +710,28 @@ export default class ContainerSidePeekComponentView {
       e.target
         .closest(".slide-options")
         .previousElementSibling.textContent.trim()
-        .toLowerCase()
+        .toLowerCase(),
     );
     const inputContainer = e.target.closest("li");
     const input = e.target;
 
     const previousElInput =
       inputContainer?.previousElementSibling?.querySelector(
-        `.slide-${inputType}-input`
+        `.slide-${inputType}-input`,
       );
 
     const nextElInput = inputContainer?.nextElementSibling?.querySelector(
-      `.slide-${inputType}-input`
+      `.slide-${inputType}-input`,
     );
-    const allInputTypeLength = Array.from(document.querySelectorAll(`.slide-${inputType}-input`)).length
+    const allInputTypeLength = Array.from(
+      document.querySelectorAll(`.slide-${inputType}-input`),
+    ).length;
 
     //prevent delete of last and only item except updating it
     if (allInputTypeLength === 1) {
-      this.setDeleteActivatedState(false)
-      return
+      this.setDeleteActivatedState(false);
+      return;
     }
-
 
     const payload = {
       itemId: this._state.itemId,
@@ -693,7 +753,7 @@ export default class ContainerSidePeekComponentView {
         payload,
         null,
         inputType.trim(),
-        false
+        false,
       );
     if (!previousElInput && !nextElInput) return;
 
@@ -714,7 +774,7 @@ export default class ContainerSidePeekComponentView {
       e.target
         .closest(".slide-options")
         .previousElementSibling.textContent.trim()
-        .toLowerCase()
+        .toLowerCase(),
     );
     const actionCheckbox = e.target.closest(".slide-action-items-checkbox");
     const actionText = e.target.parentElement.nextElementSibling;
@@ -742,7 +802,7 @@ export default class ContainerSidePeekComponentView {
       payload,
       null,
       null,
-      "actionItems"
+      "actionItems",
     );
   }
 
@@ -765,7 +825,7 @@ export default class ContainerSidePeekComponentView {
       this._state.eventHandlers.tableItemControllers.controlGetTableItem(
         +this._state.tableId,
         +this._state.itemId,
-        1
+        1,
       );
 
     this.reRenderSidePeek(item, position);
@@ -776,7 +836,7 @@ export default class ContainerSidePeekComponentView {
       this._state.eventHandlers.tableItemControllers.controlGetTableItem(
         +this._state.tableId,
         +this._state.itemId,
-        -1
+        -1,
       );
 
     this.reRenderSidePeek(item, position);
@@ -823,7 +883,7 @@ export default class ContainerSidePeekComponentView {
     const type = this._formatInputType(
       e.target
         .closest(".slide-options")
-        .previousElementSibling.textContent.toLowerCase()
+        .previousElementSibling.textContent.toLowerCase(),
     );
 
     return type;
@@ -840,10 +900,11 @@ export default class ContainerSidePeekComponentView {
     const formatInput = inputType.split("-");
     return shouldFormatInput
       ? formatInput[0] +
-      (formatInput[1][0].toUpperCase() +
-        formatInput[1].slice(1).toLowerCase())
+          (formatInput[1][0].toUpperCase() +
+            formatInput[1].slice(1).toLowerCase())
       : inputType;
   }
+
   _splitFromInputVal(inputContainer, inputVal, valToSplit) {
     const val = inputVal.split(valToSplit)[0];
     if (val) inputContainer.textContent = val;
@@ -882,7 +943,7 @@ export default class ContainerSidePeekComponentView {
 
   refreshContent(updatedData) {
     //reset component itemData value
-    this.setItemDataState(updatedData)
+    this.setItemDataState(updatedData);
 
     const itemPropertyContainer = document.querySelector(".slide-content");
     const contentContainer = document.querySelector(".container-slide-content");
@@ -890,7 +951,7 @@ export default class ContainerSidePeekComponentView {
     const tableItemTags = this._generateSlideTagsMarkup(updatedData);
     const contentMarkup = this._generateSlideContent(
       updatedData,
-      tableItemTags
+      tableItemTags,
     );
     itemPropertyContainer.innerHTML = "";
     contentContainer.innerHTML = "";
@@ -908,7 +969,7 @@ export default class ContainerSidePeekComponentView {
 
     componentGlobalState.renderTableItem(
       table.tableItems,
-      componentGlobalState.filterMethod
+      componentGlobalState.filterMethod,
     );
   }
 
@@ -927,7 +988,7 @@ export default class ContainerSidePeekComponentView {
   remove() {
     const cls = this;
     this._events.forEach((ev) =>
-      this._state.component.removeEventListener(ev, cls._handleEvents, true)
+      this._state.component.removeEventListener(ev, cls._handleEvents, true),
     );
 
     this._state.component.remove();

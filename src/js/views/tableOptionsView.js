@@ -21,7 +21,7 @@ class TableOptionsView extends optionsView {
     tableAttribs,
     overlay,
     callerOverlay,
-    callBack
+    callBack,
   ) {
     this._currentTable = table;
     this._handleEditOptions(e, tableAttribs);
@@ -40,11 +40,9 @@ class TableOptionsView extends optionsView {
         ?.closest(".edit-content")
         ?.querySelector(".edit-text")
         .textContent.trim();
-      // console.log("traversed", w);
     }
     if (!noOptionsValue) optionsValue = e.target.textContent.trim();
 
-    console.log(optionsValue);
     if (optionsValue && optionsValue === "Rename")
       this._handleRenameOption(tableAttribs);
   }
@@ -64,7 +62,6 @@ class TableOptionsView extends optionsView {
     }
     if (!noOptionsValue) optionsValue = e.target.textContent.trim();
 
-    console.log(optionsValue);
     if (optionsValue && optionsValue === "Duplicate")
       this._handleDuplicateOption(e, table, overlay, callerOverlay, callBack);
 
@@ -74,7 +71,6 @@ class TableOptionsView extends optionsView {
 
   _handleRenameOption(tableAttribs) {
     const cls = this;
-    debugger;
     const renameInputContainer = document.querySelector(".edit-content-form");
     const renameInputForm = document.querySelector("#table-rename-form");
     const renameInput = document.querySelector(".table-rename");
@@ -90,8 +86,6 @@ class TableOptionsView extends optionsView {
       //format form data
       let formData = new FormData(e.target);
       [formData] = [...formData];
-
-      console.log(formData);
 
       //set table UI value if exists
       cls._updateUITableTitle(cls._currentTable, renameInput.value);
@@ -109,7 +103,6 @@ class TableOptionsView extends optionsView {
   }
 
   _handleDuplicateOption(e, table, overlay, callerOverlay, callBack) {
-    console.log("the cur table gotten", table);
     // const currentTable = document.querySelector(".table-row-active");
     const journalId = +table.dataset.id;
     overlay.remove();
@@ -130,7 +123,7 @@ class TableOptionsView extends optionsView {
   _updateUITableTitle(currentTable, titleValue) {
     // const [_, journalId, journalIndex] = tableAttribs;
     const tableTitles = Array.from(
-      document.querySelectorAll(`[data-id="${currentTable.dataset.id}"]`)
+      document.querySelectorAll(`[data-id="${currentTable.dataset.id}"]`),
     );
 
     tableTitles.forEach((title) => {
@@ -208,7 +201,7 @@ class TableOptionsView extends optionsView {
                   </div>
                   <div class="edit-text">Rename</div>
                 </div>
-                
+
               </div>
             </div>
           </div>
@@ -304,7 +297,7 @@ class TableOptionsView extends optionsView {
                 </div>
               </div>
             </div>
-            
+
           </div>
         </div>
       </div>
@@ -326,7 +319,7 @@ class TableOptionsView extends optionsView {
           </div>
           <div class="action-filter-text">${property.text}</div>
         </div>
-                  
+
       `;
     });
     return propertiesMarkup;
@@ -360,7 +353,7 @@ class TableOptionsView extends optionsView {
                       src="./src/icons/plus.svg"
                       class="filter-icon filter-icon-add"
                       alt=""
-        
+
                     <img
                       src="./src/icons/filter.svg"
                       class="filter-icon filter-icon-filter"

@@ -14,8 +14,8 @@ export default class TableFilterRuleComponent {
   _componentHandler = importComponentOptionsView.object;
   _state;
   _events = ["click", "keyup"];
-  _signals = importSignals.object
-  _mixinActive = false
+  _signals = importSignals.object;
+  _mixinActive = false;
 
   constructor(state) {
     this._state = state;
@@ -67,9 +67,9 @@ export default class TableFilterRuleComponent {
     const removeFilterInput = ["Is empty", "Is not empty"];
     const filterInputMarkup =
       this._state?.removeFilterInput ||
-        removeFilterInput.find(
-          (filter) => filter.toLowerCase() === conditional?.toLowerCase()
-        )
+      removeFilterInput.find(
+        (filter) => filter.toLowerCase() === conditional?.toLowerCase(),
+      )
         ? ""
         : this._generateFilterInput(inpVal, property);
 
@@ -84,21 +84,21 @@ export default class TableFilterRuleComponent {
               </div>
               <div class="added-rule-icon">
                 ${svgMarkup(
-      "filter-addeed-icon icon-sm nav-icon-active",
-      "arrow-down"
-    )}
+                  "filter-addeed-icon icon-sm nav-icon-active",
+                  "arrow-down",
+                )}
               </div>
             </div>
             <div class="div-filler"></div>
             <div class="filter-input-option hover">
               ${svgMarkup(
-      "filter-added-icon icon-md nav-icon-active",
-      "ellipsis"
-    )}
+                "filter-added-icon icon-md nav-icon-active",
+                "ellipsis",
+              )}
             </div>
           </div>
           ${filterInputMarkup}
-          
+
         </div>
       </div>
     `;
@@ -106,11 +106,11 @@ export default class TableFilterRuleComponent {
 
   render() {
     // debugger;
-    if (!this._mixinActive) this._addMixin()
+    if (!this._mixinActive) this._addMixin();
     const cls = this;
     this._state.conditional = PREPOSITIONS.filter(
       (preposition) =>
-        preposition[this._state.property.text.toLowerCase()] === true
+        preposition[this._state.property.text.toLowerCase()] === true,
     );
 
     const inputValue =
@@ -123,13 +123,13 @@ export default class TableFilterRuleComponent {
     // if (!fnActive) {
     this._state.markup = this._generateMarkup(
       this._state.parentState.conditional ??
-      this._state.conditional[0].condition,
+        this._state.conditional[0].condition,
       inputValue,
-      this._state.property.text
+      this._state.property.text,
     );
 
     //set parent state conditional value if it doesn't exist
-    this._setConditional()
+    this._setConditional();
 
     //disables the click interceptor|Allows click to be detected in background
     // this._state.disableOverlayInterceptor = true;
@@ -148,7 +148,7 @@ export default class TableFilterRuleComponent {
       function (e) {
         cls._componentHandler._componentRemover(cls._state);
       },
-      { once: true }
+      { once: true },
     );
 
     //component handles its event
@@ -162,12 +162,12 @@ export default class TableFilterRuleComponent {
 
   _insertFilterRuleInput() {
     const filterRuleInputParentContainer = document.querySelector(
-      ".filter-input-content-box"
+      ".filter-input-content-box",
     );
 
     filterRuleInputParentContainer.insertAdjacentHTML(
       "afterend",
-      this._generateFilterInput(null, this._state.property.text)
+      this._generateFilterInput(null, this._state.property.text),
     );
   }
 
@@ -243,7 +243,7 @@ export default class TableFilterRuleComponent {
 
   _handlePrepositionSelectEvent(e) {
     const prepositionContainer = document.querySelector(
-      ".filter-input-content"
+      ".filter-input-content",
     );
 
     const { top, left, width, height } =
@@ -336,7 +336,7 @@ export default class TableFilterRuleComponent {
     const duplicateCheck =
       addedTagItems.length > 0 &&
       addedTagItems.find(
-        (tag) => tag.toLowerCase() === tagObj.text.toLowerCase()
+        (tag) => tag.toLowerCase() === tagObj.text.toLowerCase(),
       );
 
     //prevents duplicate addition of tag to tag items
@@ -345,8 +345,6 @@ export default class TableFilterRuleComponent {
 
       if (!componentGlobalState.filterTagList)
         componentGlobalState.filterTagList = [];
-
-      console.log("the component glob filertaglist", componentGlobalState.filterTagList)
 
       componentGlobalState.filterTagList.push(tagObj);
 
@@ -364,7 +362,7 @@ export default class TableFilterRuleComponent {
     //remove the tag from the componentGlobalState
     const tagToRemoveIndex = componentGlobalState.filterTagList.findIndex(
       (tag) =>
-        tag.text.toLowerCase() === tagToRemove.textContent.trim().toLowerCase()
+        tag.text.toLowerCase() === tagToRemove.textContent.trim().toLowerCase(),
     );
 
     componentGlobalState.filterTagList.splice(tagToRemoveIndex, 1);
@@ -388,16 +386,15 @@ export default class TableFilterRuleComponent {
       .trim();
 
     const table = this._state.eventHandlers.tableControllers.controlGetTable(
-      +currentTable.dataset.id
+      +currentTable.dataset.id,
     );
 
-
-    const filterType = this._getPropertyType()
+    const filterType = this._getPropertyType();
 
     this._state.filterMethod = this._queryConditional(
       conditionalValue.toLowerCase(),
       filterType,
-      input
+      input,
     );
 
     //add the filterMethod to the parentState as well and the component Global State
@@ -408,10 +405,20 @@ export default class TableFilterRuleComponent {
       conditionalValue;
 
     //persist the filter properties
-    this._state.eventHandlers.tableControllers.controlPersistTableFunc({ tableId: +currentTable.dataset.id, type: filterType, conditional: conditionalValue.toLowerCase(), value: input, tags: componentGlobalState.filterTagList, property: this._state.property.text.toLowerCase() }, "filter")
+    this._state.eventHandlers.tableControllers.controlPersistTableFunc(
+      {
+        tableId: +currentTable.dataset.id,
+        type: filterType,
+        conditional: conditionalValue.toLowerCase(),
+        value: input,
+        tags: componentGlobalState.filterTagList,
+        property: this._state.property.text.toLowerCase(),
+      },
+      "filter",
+    );
 
     //filter and render the table
-    this._renderFiltered(table)
+    this._renderFiltered(table);
   }
 
   _queryConditional(conditional, property, input) {
@@ -445,7 +452,7 @@ export default class TableFilterRuleComponent {
           (items) =>
             items[property] !== null &&
             items[property] !== "" &&
-            items[property].length > 0
+            items[property].length > 0,
         );
     }
 
@@ -479,8 +486,8 @@ export default class TableFilterRuleComponent {
       filterMethod = (property, input, tableItems) =>
         tableItems.filter((items) =>
           items[property].find((tag) =>
-            input.find((filteredTag) => Number(filteredTag.id) === tag)
-          )
+            input.find((filteredTag) => Number(filteredTag.id) === tag),
+          ),
         );
     }
 
@@ -489,8 +496,8 @@ export default class TableFilterRuleComponent {
         tableItems.filter(
           (items) =>
             !items[property].find((tag) =>
-              input.find((filteredTag) => Number(filteredTag.id) === tag)
-            )
+              input.find((filteredTag) => Number(filteredTag.id) === tag),
+            ),
         );
     }
 
@@ -528,15 +535,18 @@ export default class TableFilterRuleComponent {
   // importTableComponentView.object.renderTableItem(filteredItems, null, filterPlaceHolder);
   // }
 
-
-
   _addMixin() {
-    const { constructor, ...prototypePatch } = Object.getOwnPropertyDescriptors(TableFuncMixin.prototype)
+    const { constructor, ...prototypePatch } = Object.getOwnPropertyDescriptors(
+      TableFuncMixin.prototype,
+    );
 
     //add copied props to instance proto
-    Object.defineProperties(Object.getPrototypeOf(this).__proto__, prototypePatch)
+    Object.defineProperties(
+      Object.getPrototypeOf(this).__proto__,
+      prototypePatch,
+    );
 
-    this._mixinActive = true
+    this._mixinActive = true;
   }
 
   remove(reset = true, parentRemove = false) {
@@ -545,7 +555,7 @@ export default class TableFilterRuleComponent {
       //removes only the component and no rerender
       this._state.component.remove();
       this._events.forEach((ev) =>
-        this._state.component.removeEventListener(ev, cls._handleEvents, true)
+        this._state.component.removeEventListener(ev, cls._handleEvents, true),
       );
       if (!this._state.disableOverlayInterceptor) this._state.overlay.remove();
       return;
@@ -554,7 +564,7 @@ export default class TableFilterRuleComponent {
     const currentTable = document.querySelector(".table-row-active");
 
     const table = this._state.eventHandlers.tableControllers.controlGetTable(
-      +currentTable.dataset.id
+      +currentTable.dataset.id,
     );
     // if (table.tableItems.length === 0)
     //reset the table back to default
@@ -566,7 +576,7 @@ export default class TableFilterRuleComponent {
     //remove its components
     this._state.component.remove();
     this._events.forEach((ev) =>
-      this._state.component.removeEventListener(ev, cls._handleEvents, true)
+      this._state.component.removeEventListener(ev, cls._handleEvents, true),
     );
     if (!this._state.disableOverlayInterceptor) this._state.overlay.remove();
   }

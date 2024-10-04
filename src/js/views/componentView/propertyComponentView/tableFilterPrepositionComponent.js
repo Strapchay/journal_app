@@ -57,14 +57,13 @@ export default class TableFilterPrepositionComponent {
       function (e) {
         cls._componentHandler._componentRemover(cls._state);
       },
-      { once: true }
+      { once: true },
     );
 
     //component handles its event
     this._events.forEach((ev) => {
       component.addEventListener(ev, this._handleEvents.bind(cls));
     });
-
   }
 
   _handleEvents(e) {
@@ -83,7 +82,7 @@ export default class TableFilterPrepositionComponent {
     const prepositionRemovesFilterInput = ["Is empty", "Is not empty"];
 
     const prepositionContainer = document.querySelector(
-      ".filter-input-filter-text"
+      ".filter-input-filter-text",
     );
 
     const filterRuleInput = document.querySelector(".filter-input-container");
@@ -96,10 +95,8 @@ export default class TableFilterPrepositionComponent {
     this._state.parentState.preposition = selectPrepositionValue;
 
     const removeFilterInput = prepositionRemovesFilterInput.find(
-      (prep) => prep.toLowerCase() === selectPrepositionValue.toLowerCase()
+      (prep) => prep.toLowerCase() === selectPrepositionValue.toLowerCase(),
     );
-
-    console.log("the filter tag list comp glob", componentGlobalState.filterTagList)
 
     const filterInputToExecute =
       this._state.property.text.toLowerCase() === "tags"
@@ -118,7 +115,8 @@ export default class TableFilterPrepositionComponent {
 
     if (removeFilterInput && filterRuleInput) {
       //clear the filteredTagList from the global component state
-      if (componentGlobalState?.filterTagList) componentGlobalState.filterTagList.length = 0;
+      if (componentGlobalState?.filterTagList)
+        componentGlobalState.filterTagList.length = 0;
 
       filterRuleInput.remove();
       this._state.parent._handleEvents(e, null, true);
@@ -126,7 +124,8 @@ export default class TableFilterPrepositionComponent {
 
     if (removeFilterInput && !filterRuleInput) {
       //clear the filteredTagList from the global component state
-      if (componentGlobalState?.filterTagList) componentGlobalState.filterTagList.length = 0;
+      if (componentGlobalState?.filterTagList)
+        componentGlobalState.filterTagList.length = 0;
 
       // this._state.executeFilter(null);
       this._state.parent._handleEvents(e, null, true);
